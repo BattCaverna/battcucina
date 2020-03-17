@@ -10,37 +10,32 @@ import Queue
 import SocketServer
 import inspect
 
-
-class MyTCPHandler(SocketServer.StreamRequestHandler):
+class CmdTCPHandler(SocketServer.StreamRequestHandler):
 
     def handle(self):
         # self.request is the TCP socket connected to the client
-        reply = ""
         while True:
             line = self.rfile.readline()
             if line == "":
-                break
+                return
             data = line.strip().split()
             if len(data) > 0:
                 cmd = data[0]
                 for command in inspect.getmembers(self, predicate=inspect.ismethod):
                     if command[0] == "cmd_" + cmd:
                         ret = command[1](data)
-                        if ret is None:
+                        if ret == None:
                             return
                         elif ret[0] == 0:
-                            reply = "0 Command OK.%s%s" % ("\n" if len(ret) > 1 else "", "\n".join(ret[1:]))
+                            self.request.sendall("0 Command OK.%s%s\n" % ("\n" if len(ret) > 1 else "", "\n".join(ret[1:])))
                         elif ret[0] == -2:
-                            reply = "-2 Invalid arguments."
+                            self.request.sendall("-2 Invalid arguments.\n")
                         else:
-                            reply = "%d Error.%s" % "\n".join(ret[1:])
+                            self.request.sendall("%d Error.%s\n" % "\n".join(ret[1:]))
                         break
                 else:
-                    reply = "-1 Command not found."
-            else:
-                reply = ""
-
-            self.request.sendall("%s\n" % reply)
+                    self.request.sendall("-1 Command not found.\n")
+                #self.request.sendall("\n")
 
     def cmd_setout(self, args):
         try:
@@ -245,6 +240,8 @@ def gpio_callback(arg):
 
     prev_press = time.time()
 
+class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
+    allow_reuse_address = True
 
 # Main program logic follows:
 if __name__ == '__main__':
@@ -265,9 +262,8 @@ if __name__ == '__main__':
     HOST, PORT = "0.0.0.0", 8023
 
     # Create the server
-    server = SocketServer.TCPServer((HOST, PORT), MyTCPHandler)
+    server = ThreadedTCPServer((HOST, PORT), CmdTCPHandler)
     server.strip = led
 
-    # Activate the server; this will keep running until you
-    # interrupt the program with Ctrl-C
-    server.serve_forever()
+    server_thread = threading.Thread(target=server.serve_forever)
+    server_thread.start()
