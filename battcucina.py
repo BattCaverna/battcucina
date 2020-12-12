@@ -21,23 +21,24 @@ class CmdTCPHandler(socketserver.StreamRequestHandler):
                 return
             data = line.strip().split()
             if len(data) > 0:
-                cmd = data[0]
+                cmd = data[0].decode()
                 for command in inspect.getmembers(self, predicate=inspect.ismethod):
                     if command[0] == "cmd_" + cmd:
                         ret = command[1](data)
                         if ret == None:
                             return
                         elif ret[0] == 0:
-                            self.request.sendall("0 Command OK.%s%s\n" % (
-                                "\n" if len(ret) > 1 else "", "\n".join(ret[1:])))
+                            self.request.sendall(("0 Command OK.%s%s\n" % (
+                                "\n" if len(ret) > 1 else "", "\n".join(ret[1:]))).encode())
                         elif ret[0] == -2:
-                            self.request.sendall("-2 Invalid arguments.\n")
+                            self.request.sendall(
+                                "-2 Invalid arguments.\n".encode())
                         else:
                             self.request.sendall(
-                                "%d Error.%s\n" % "\n".join(ret[1:]))
+                                "%d Error.%s\n" % "\n".join(ret[1:]).encode())
                         break
                 else:
-                    self.request.sendall("-1 Command not found.\n")
+                    self.request.sendall("-1 Command not found.\n".encode())
                 # self.request.sendall("\n")
 
     def cmd_setout(self, args):
@@ -193,7 +194,7 @@ class LedThread(threading.Thread):
         self.stripColorFrom(-1, color)
 
     def stripMid(self, color):
-        mid = self.strip.numPixels() / 2
+        mid = int(self.strip.numPixels() / 2)
         for i in range(mid):
             self.strip.setPixelColor(mid+i, color)
             self.strip.setPixelColor(mid-i, color)
@@ -204,7 +205,7 @@ class LedThread(threading.Thread):
         self.strip.show()
 
     def randomic(self, color):
-        idx = range(self.strip.numPixels())
+        idx = list(range(self.strip.numPixels()))
         random.shuffle(idx)
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(idx[i], color)
@@ -238,6 +239,9 @@ prev_press = time.time()
 
 def gpio_callback(arg):
     global prev_press
+
+    pb = {27: "induction hob", 17: "coffee"}
+    print("Button pressed: %s side" % pb[arg])
 
     if (time.time() - prev_press) < 2:
         cmd_queue.put(MSG_COLOR_MOVE)
