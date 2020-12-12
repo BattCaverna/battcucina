@@ -28,15 +28,17 @@ class CmdTCPHandler(socketserver.StreamRequestHandler):
                         if ret == None:
                             return
                         elif ret[0] == 0:
-                            self.request.sendall("0 Command OK.%s%s\n" % ("\n" if len(ret) > 1 else "", "\n".join(ret[1:])))
+                            self.request.sendall("0 Command OK.%s%s\n" % (
+                                "\n" if len(ret) > 1 else "", "\n".join(ret[1:])))
                         elif ret[0] == -2:
                             self.request.sendall("-2 Invalid arguments.\n")
                         else:
-                            self.request.sendall("%d Error.%s\n" % "\n".join(ret[1:]))
+                            self.request.sendall(
+                                "%d Error.%s\n" % "\n".join(ret[1:]))
                         break
                 else:
                     self.request.sendall("-1 Command not found.\n")
-                #self.request.sendall("\n")
+                # self.request.sendall("\n")
 
     def cmd_setout(self, args):
         try:
@@ -55,11 +57,11 @@ class CmdTCPHandler(socketserver.StreamRequestHandler):
 
 
 def R(color):
-    return (color>>16) & 0xff
+    return (color >> 16) & 0xff
 
 
 def G(color):
-    return (color>>8) & 0xff
+    return (color >> 8) & 0xff
 
 
 def B(color):
@@ -88,7 +90,7 @@ LED_DMA = 5       # DMA channel to use for generating signal (try 5)
 LED_BRIGHTNESS = 255     # Set to 0 for darkest and 255 for brightest
 LED_INVERT = False   # True to invert the signal (when using NPN transistor)
 
-COLOR_ON = Color(160, 255, 72) #Color(255, 240, 100)
+COLOR_ON = Color(160, 255, 72)  # Color(255, 240, 100)
 COLOR_OFF = Color(0, 0, 0)
 
 cmd_queue = queue.Queue()
@@ -107,15 +109,18 @@ class LedThread(threading.Thread):
         self.queue = queue
         self.color = [COLOR_OFF, COLOR_ON]
         self.state = 0
-        self.strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS)
+        self.strip = Adafruit_NeoPixel(
+            LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS)
         self.strip.begin()
         self.buf = []
-        self.buf = gen_buffer(self.color[1], Color(50, 255, 50), self.strip.numPixels()/2)
+        self.buf = gen_buffer(self.color[1], Color(
+            50, 255, 50), self.strip.numPixels()/2)
         self.buf = self.buf + list(reversed(self.buf))
         if self.strip.numPixels() % 2:
             self.buf.append(self.color[1])
 
-        self.transitions = [self.stripStart, self.stripEnd, self.stripMid, self.fade, self.randomic]
+        self.transitions = [self.stripStart, self.stripEnd,
+                            self.stripMid, self.fade, self.randomic]
         self.lock = threading.RLock()
 
     def put(self, msg):
@@ -244,6 +249,7 @@ def gpio_callback(arg):
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     allow_reuse_address = True
+
 
 # Main program logic follows:
 if __name__ == '__main__':
