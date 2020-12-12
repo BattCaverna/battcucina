@@ -1,16 +1,17 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import time
 import random
 import sys
-from neopixel import *
+from rpi_ws281x import *
 import RPi.GPIO as GPIO
 import threading
-import Queue
-import SocketServer
+import queue
+import socketserver
 import inspect
 
-class CmdTCPHandler(SocketServer.StreamRequestHandler):
+
+class CmdTCPHandler(socketserver.StreamRequestHandler):
 
     def handle(self):
         # self.request is the TCP socket connected to the client
@@ -71,7 +72,7 @@ def gen_buffer(start, stop, len):
     dg = (G(stop) - G(start))/float(len)
     db = (B(stop) - B(start))/float(len)
     c = [R(start), G(start), B(start)]
-    for i in range(len):
+    for i in range(int(len)):
         strip.append(Color(int(c[0]), int(c[1]), int(c[2])))
         c[0] += dr
         c[1] += dg
@@ -90,7 +91,7 @@ LED_INVERT = False   # True to invert the signal (when using NPN transistor)
 COLOR_ON = Color(160, 255, 72) #Color(255, 240, 100)
 COLOR_OFF = Color(0, 0, 0)
 
-cmd_queue = Queue.Queue()
+cmd_queue = queue.Queue()
 
 
 MSG_OFF = 0
@@ -130,7 +131,7 @@ class LedThread(threading.Thread):
             msg = None
             try:
                 msg = self.queue.get(True, 0.5)
-            except Queue.Empty:
+            except queue.Empty:
                 pass
 
             with self.lock:
@@ -227,7 +228,7 @@ class LedThread(threading.Thread):
         self.setColor(color)
 
 
-prev_press = time.clock()
+prev_press = time.time()
 
 
 def gpio_callback(arg):
@@ -240,7 +241,8 @@ def gpio_callback(arg):
 
     prev_press = time.time()
 
-class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
+
+class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     allow_reuse_address = True
 
 # Main program logic follows:
