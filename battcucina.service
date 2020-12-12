@@ -1,0 +1,11 @@
+[Unit]
+Description=BattCaverna Luce cucina service
+After=multi-user.target
+ 
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /usr/local/bin/battcucina.py
+Restart=on-abort
+ 
+[Install]
+WantedBy=multi-user.target
