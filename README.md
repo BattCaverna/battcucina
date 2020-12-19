@@ -28,6 +28,11 @@
    - `cd battcucina`
    - `./install_dep.sh`
    - `./install_service.sh`
+   - `sudo vim /etc/rsyslog.conf` e aggiungere in cima alle `RULES`:
+   ```
+   #Invia tutto anche al synology
+   *.*                             @battstation:514
+   ```
    - `sudo reboot`
    
 ## Mettere il filesystem read only:
