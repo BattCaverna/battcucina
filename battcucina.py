@@ -91,7 +91,7 @@ LED_DMA = 5       # DMA channel to use for generating signal (try 5)
 LED_BRIGHTNESS = 255     # Set to 0 for darkest and 255 for brightest
 LED_INVERT = False   # True to invert the signal (when using NPN transistor)
 
-COLOR_ON = Color(160, 255, 72)  # Color(255, 240, 100)
+COLOR_ON = Color(255, 160, 72)  # Color(255, 240, 100)
 COLOR_OFF = Color(0, 0, 0)
 
 cmd_queue = queue.Queue()
@@ -115,7 +115,7 @@ class LedThread(threading.Thread):
         self.strip.begin()
         self.buf = []
         self.buf = gen_buffer(self.color[1], Color(
-            50, 255, 50), self.strip.numPixels()/2)
+            255, 50, 50), self.strip.numPixels()/2)
         self.buf = self.buf + list(reversed(self.buf))
         if self.strip.numPixels() % 2:
             self.buf.append(self.color[1])
