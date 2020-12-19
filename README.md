@@ -17,8 +17,9 @@
 ```
  
  - Una volta avviata la raspberry da SD:
+   - `ssh pi@raspberry`
    - Cambiare la password con `passwd`
-   - Fare un `vi /etc/hostname` e cambiare l'hostname
+   - `vi /etc/hostname` e cambiare l'hostname
    - `sudo apt update`
    - `sudo apt upgrade`
    - `sudo apt install vim git`
@@ -26,8 +27,7 @@
    - `git clone https://github.com/BattCaverna/battcucina.git`
    - `sudo battcucina/install_dep.sh`
    - `sudo battcucina/install_service.sh`
-   - Riavviare `sudo reboot`
-    
+   - `sudo reboot`
    
 ## Mettere il filesystem read only:
  - https://medium.com/swlh/make-your-raspberry-pi-file-system-read-only-raspbian-buster-c558694de79
