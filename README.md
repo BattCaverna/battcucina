@@ -25,8 +25,8 @@
    - `sudo apt install vim git`
    - `mkdir src; cd src`
    - `git clone https://github.com/BattCaverna/battcucina.git`
-   - `sudo battcucina/install_dep.sh`
-   - `sudo battcucina/install_service.sh`
+   - `battcucina/install_dep.sh`
+   - `battcucina/install_service.sh`
    - `sudo reboot`
    
 ## Mettere il filesystem read only:
