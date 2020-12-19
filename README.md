@@ -1,8 +1,8 @@
 # battcucina
 
-## Come creare una SD
+## Come creare una SD da zero
 
- - Scaricare l'ultima immagine del raspberry pi os
+ - Scaricare l'ultima immagine del Raspberry PI OS Lite
  - Dentro la directory `boot` della SD fare un `touch ssh` per abilitare il server ssh
  - Dentro la directory `boot` della SD creare il file `wpa_supplicant.conf` con questo contenuto:
 ```
@@ -19,16 +19,15 @@
  - Una volta avviata la raspberry da SD:
    - Cambiare la password con `passwd`
    - Fare un `vi /etc/hostname` e cambiare l'hostname
-
- 
- - Una volta riavviato:
-    - `sudo apt update`
-    - `sudo apt upgrade`
-    - `sudo apt install vim git`
-    - `mkdir src; cd src`
-    - `git clone `
-    - Riavviare `sudo reboot`
+   - `sudo apt update`
+   - `sudo apt upgrade`
+   - `sudo apt install vim git`
+   - `mkdir src; cd src`
+   - `git clone https://github.com/BattCaverna/battcucina.git`
+   - `sudo battcucina/install_dep.sh`
+   - `sudo battcucina/install_service.sh`
+   - Riavviare `sudo reboot`
     
    
-## Raspberry with read only FS:
+## Mettere il filesystem read only:
  - https://medium.com/swlh/make-your-raspberry-pi-file-system-read-only-raspbian-buster-c558694de79
