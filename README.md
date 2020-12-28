@@ -17,7 +17,7 @@
 ```
  
  - Una volta avviata la raspberry da SD:
-   - `ssh pi@raspberry`
+   - `ssh pi@raspberrypi`
    - Cambiare la password con `passwd`
    - `vi /etc/hostname` e cambiare l'hostname
    - `sudo apt update`
