@@ -19,9 +19,10 @@
  - Una volta avviata la raspberry da SD:
    - `ssh pi@raspberrypi`
    - Cambiare la password con `passwd`
-   - `vi /etc/hostname` e cambiare l'hostname
+   - `sudo vi /etc/hostname` e cambiare l'hostname
    - `sudo apt update`
    - `sudo apt upgrade`
+   - `sudo dpkg-reconfigure tzdata`
    - `sudo apt install vim git`
    - `mkdir src; cd src`
    - `git clone https://github.com/BattCaverna/battcucina.git`
