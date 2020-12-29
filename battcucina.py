@@ -11,13 +11,13 @@ import socketserver
 import inspect
 
 
-class CmdTCPHandler(socketserver.StreamRequestHandler):
+class CmdTCPHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
         # self.request is the TCP socket connected to the client
         while True:
-            line = self.rfile.readline()
-            if line == "":
+            line = self.request.recv(1024)
+            if len(line) == 0:
                 return
             data = line.strip().split()
             if len(data) > 0:
