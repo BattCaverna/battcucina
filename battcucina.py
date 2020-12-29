@@ -236,19 +236,19 @@ class LedThread(threading.Thread):
 
 prev_press = time.time()
 
-
 def gpio_callback(arg):
     global prev_press
+    now = time.time()
 
     pb = {27: "induction hob", 17: "coffee"}
     print("Button pressed: %s side" % pb[arg])
 
-    if (time.time() - prev_press) < 2:
+    if (now - prev_press) < 2:
         cmd_queue.put(MSG_COLOR_MOVE)
     else:
         cmd_queue.put(MSG_TOGGLE)
 
-    prev_press = time.time()
+    prev_press = now
 
 
 class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
