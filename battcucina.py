@@ -266,10 +266,8 @@ if __name__ == '__main__':
     pb_caffe = 17
     GPIO.setup(pb_piano, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.setup(pb_caffe, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.add_event_detect(pb_piano, GPIO.FALLING)
-    GPIO.add_event_detect(pb_caffe, GPIO.FALLING)
-    GPIO.add_event_callback(pb_piano, gpio_callback)
-    GPIO.add_event_callback(pb_caffe, gpio_callback)
+    GPIO.add_event_detect(pb_piano, GPIO.FALLING, gpio_callback, bouncetime=300)
+    GPIO.add_event_detect(pb_caffe, GPIO.FALLING, gpio_callback, bouncetime=300)
 
     HOST, PORT = "0.0.0.0", 8023
 
