@@ -34,6 +34,10 @@
    #Invia tutto anche al synology
    *.*                             @battstation:514
    ```
+   - `sudo vim systemd/system/sysinit.target.wants/systemd-timesyncd.service`
+   - Trovare `PrivateTmp=yes` e metterlo a `no`
+   - `sudo systemctl daemon-reload`
+   - `sudo systemctl restart systemd-timesyncd.service`
    - `sudo reboot`
    
 ## Mettere il filesystem read only:
